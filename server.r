@@ -18,17 +18,17 @@ shinyServer(function(input, output) {
   output$p1 <- renderPlot({
     if (input$graph_type == "histogram") {
       # Histogram
-      ggplot(df_country(), aes_string(x = input$continuous_variable, fill=prediction)) +
+      ggplot(df_country(), aes_string(x = input$continuous_variable)) + ##removed the fill
         geom_histogram() +  # histogram geom
-        labs(y="number of people", title=paste("Trend of", input$age)) +  # labels
+        labs(y="number of people", title=paste("Trend of", input$age)) +  # labels ##input should be continuos_variable
         facet_wrap(~prediction)    # facet by prediction
     }
     else {
       # Boxplot
-      ggplot(df_country(), aes_string(y = input$continous_variable)) +
+      ggplot(df_country(), aes_string(y = input$continuos_variable)) + ##continuos was misspelled
         geom_boxplot() +  # boxplot geom
         coord_flip() +  # flip coordinates
-        labs(y="Number of People", title = paste("Trend of", input$age)) +  # labels
+        labs(y="Number of People", title = paste("Trend of", input$age)) +  # labels ##input should be continuos_variable
         facet_wrap(~prediction)    # facet by prediction
     }
     
@@ -42,11 +42,11 @@ shinyServer(function(input, output) {
       theme(axis.text.x= element_text(angle=45))    # modify theme to change text angle and legend position
     
     if (input$is_stacked) {
-      p + geom_bar(stat="identity", aes_string(fill=~prediction))  # add bar geom and use prediction as fill
+      p + geom_bar(position = "stack", aes_string(fill=prediction))  # add bar geom and use prediction as fill ##removed the ~ and added the stacked option
     }
     else{
       p + 
-        geom_bar(aes(fill=prediction)) + # add bar geom and use input$categorical_variables as fill 
+        geom_bar(aes_string(fill = input$categorical_variable)) + # add bar geom and use input$categorical_variables as fill  ##changed the fill
         facet_wrap(~prediction)   # facet by prediction
     }
   })
